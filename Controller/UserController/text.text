@@ -1,0 +1,19 @@
+Ye error message, "Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client," Node.js mein express framework ka use karke web applications develop karte waqt aksar dekha ja sakta hai. Iska matalab hota hai ki aapne HTTP response headers ko client ke liye set karne ke baad phir se headers ko modify karne ki koshish ki hai, jo ki HTTP protocol ke rules ke khilaf hai.
+
+Is error ko samajhne ke liye, aapko HTTP response ka lifecycle samajhna hoga:
+
+Request Aaya: Jab client server par request bhejta hai, express framework us request ko handle karta hai.
+
+Response Headers Set Kiye Gaye: Aap express mein res.setHeader() ya res.header() ka istemal karke HTTP response headers ko set karte hain. Headers set karne ke baad, response headers "sent" ho jate hain, aur woh client ke taraf bheje jaate hain.
+
+Response Body Bheja Gaya: Uske baad, aap express mein res.send() ya kisi aur method ka istemal karke response body ko bhejte hain.
+
+Is error message ka matalab hota hai ki aapne response headers ko set kar diya hai aur phir se response body bhejne ki koshish ki hai, ya phir response headers ko dobara modify karne ki koshish ki hai, jo galat hai. Headers ko ek baar set kar diya gaya hai aur unhein badalna nahi chahiye.
+
+Is error ko sahi karne ke liye, aapko dhyan se code ko review karna hoga:
+
+Headers Ko Ek Baar Set Karein: Header ko set karne se pahle, aapko dhyan se check karein ki headers pahle se set nahi kiye gaye hain.
+
+Multiple Response Send Na Karein: Response headers set karne ke baad, response body ko bhejne se pahle aapko dhyan dena hoga ki aap response ko sirf ek baar hi bhej rahe hain. Multiple res.send() ya res.json() calls se bachna chahiye.
+
+Error Handling: Aapko error handling ka bhi dhyan rakhna hoga. Agar kisi request ko process karte waqt error aata hai, toh headers ko set karne ki koshish nahi karni chahiye, aur seedha error ko handle karna chahiye.
